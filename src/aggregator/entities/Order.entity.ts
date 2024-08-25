@@ -1,6 +1,6 @@
 import { Document } from 'mongoose';
 
-interface ILineItem {
+export interface ILineItem {
   id: number;
   productId: number;
   quantity: number;
@@ -15,6 +15,7 @@ export interface IOrder extends Document {
   id: number;
   lineItems: ILineItem[];
   netTotal: number;
+  status: string;
   createdOn: Date;
   modifiedOn: Date;
 }

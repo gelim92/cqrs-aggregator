@@ -40,6 +40,9 @@ export class Order {
 
   @Prop()
   netTotal: number;
+
+  @Prop()
+  status: string;
 }
 
 export const OrderSchema = SchemaFactory.createForClass(Order);
