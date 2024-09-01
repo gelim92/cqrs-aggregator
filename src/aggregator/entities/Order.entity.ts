@@ -3,10 +3,10 @@ import { Document } from 'mongoose';
 export interface ILineItem {
   id: number;
   productId: number;
-  quantity: number;
   name: string;
   manufacturer: string;
   country: string;
+  quantity: number;
   unitPrice: number;
   total: number;
 }

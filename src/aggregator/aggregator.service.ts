@@ -9,12 +9,62 @@ import { UpdateOrderDto } from './dto/UpdateOrderDto';
 export class AggregatorService {
   constructor(@InjectModel('Order') private orderModel: Model<IOrder>) {}
 
-  getAllOrders(): Promise<IOrder[]> {
-    return this.orderModel.find();
+  private buildConditions({
+    manufacturer,
+    country,
+    name,
+    status,
+  }: {
+    manufacturer?: string;
+    country?: string;
+    name?: string;
+    status?: string;
+  } = {}): any[] {
+    const conditions = [];
+    const fields = [
+      { key: 'lineItems.manufacturer', value: manufacturer },
+      { key: 'lineItems.country', value: country },
+      { key: 'lineItems.name', value: name },
+      { key: 'status', value: status },
+    ];
+
+    for (const field of fields) {
+      if (field.value) {
+        conditions.push({
+          [field.key]: { $regex: new RegExp(`^${field.value}$`, 'i') },
+        });
+      }
+    }
+
+    return conditions;
+  }
+
+  getAllOrders(
+    params: {
+      manufacturer?: string;
+      country?: string;
+      name?: string;
+      status?: string;
+      sortBy?: string;
+      sortDirection?: string;
+    } = {},
+  ): Promise<IOrder[]> {
+    const conditions = this.buildConditions(params);
+    const sortDirection = params.sortDirection || 'desc';
+    let sortObject = {};
+    if (params.sortBy) {
+      sortObject = { [params.sortBy]: sortDirection === 'desc' ? -1 : 1 };
+    }
+    return this.orderModel
+      .find(conditions.length > 0 ? { $and: conditions } : {})
+      .sort(sortObject)
+      .select('-_id -__v -lineItems._id');
   }
 
   getOrderById(orderId: number): Promise<IOrder> {
-    return this.orderModel.findOne({ id: orderId });
+    return this.orderModel
+      .findOne({ id: orderId })
+      .select('-_id -__v -lineItems._id');
   }
 
   createOrder(order: CreateOrderDto): Promise<IOrder> {
@@ -30,8 +80,10 @@ export class AggregatorService {
     orderId: number,
     updateOrderDto: UpdateOrderDto,
   ): Promise<IOrder> {
-    return this.orderModel.findOneAndUpdate({ id: orderId }, updateOrderDto, {
-      new: true,
-    });
+    return this.orderModel
+      .findOneAndUpdate({ id: orderId }, updateOrderDto, {
+        new: true,
+      })
+      .select('-_id -__v -lineItems._id');
   }
 }

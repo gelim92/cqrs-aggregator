@@ -7,6 +7,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
   Res,
 } from '@nestjs/common';
 import { AggregatorService } from './aggregator.service';
@@ -19,9 +20,22 @@ export class AggregatorController {
   constructor(private readonly aggregatorService: AggregatorService) {}
 
   @Get('orders')
-  async getOrders(@Res() response) {
+  async getOrders(
+    @Res() response,
+    @Query('manufacturer') manufacturer?: string,
+    @Query('country') country?: string,
+    @Query('name') name?: string,
+    @Query('sortBy') sortBy?: string,
+    @Query('sortDirection') sortDirection?: string,
+  ) {
     try {
-      const orders = await this.aggregatorService.getAllOrders();
+      const orders = await this.aggregatorService.getAllOrders({
+        manufacturer,
+        country,
+        name,
+        sortDirection,
+        sortBy,
+      });
       return response.status(HttpStatus.OK).json(orders);
     } catch (err) {
       return response.json(err.response);
