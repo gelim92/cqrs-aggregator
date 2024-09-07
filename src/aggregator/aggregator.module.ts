@@ -3,6 +3,7 @@ import { AggregatorService } from './aggregator.service';
 import { AggregatorController } from './aggregator.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { OrderSchema } from './schema/Order.schema';
+import { AggregatorConsumerService } from './aggregatorConsumer.service';
 
 @Module({
   imports: [
@@ -12,6 +13,6 @@ import { OrderSchema } from './schema/Order.schema';
     MongooseModule.forFeature([{ name: 'Order', schema: OrderSchema }]),
   ],
   controllers: [AggregatorController],
-  providers: [AggregatorService],
+  providers: [AggregatorService, AggregatorConsumerService],
 })
 export class AggregatorModule {}
