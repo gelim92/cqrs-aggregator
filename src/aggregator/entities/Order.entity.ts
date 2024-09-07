@@ -2,7 +2,6 @@ import { Document } from 'mongoose';
 
 export interface ILineItem {
   id: number;
-  productId: number;
   name: string;
   manufacturer: string;
   country: string;

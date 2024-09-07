@@ -20,7 +20,7 @@ Content-Type: application/json
   "id": 3,
   "lineItems": [
     {
-      "productId": "43134",
+      "id": "43134",
       "name": "Potato Chips",
       "manufacturer": "NTUC",
       "country": "SG",
@@ -29,7 +29,7 @@ Content-Type: application/json
       "total": 5
     },
     {
-      "productId": "43389",
+      "id": "43389",
       "name": "Charger",
       "manufacturer": "Apple",
       "country": "SG",
